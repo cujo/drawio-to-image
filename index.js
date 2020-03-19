@@ -4,10 +4,10 @@ const fs = require('fs');
 const puppeteer = require('puppeteer');
 
 let args = process.argv.slice(2)
-let filePath = args[0];
-console.log(filePath);
+const input = args[0];
+const output = args[1];
 
-const xml = fs.readFileSync(filePath, 'utf8');
+const xml = fs.readFileSync(input, 'utf8');
 const data = {
     nav: false,
     resize: false,
@@ -15,8 +15,6 @@ const data = {
 };
 let html = fs.readFileSync(__dirname + '/page.html', 'utf8');
 html = html.replace('{DATA}', JSON.stringify(data).replace(/"/g, '&quot;'));
-
-console.log(html);
 
 (async () => {
     const browser = await puppeteer.launch({
@@ -27,6 +25,6 @@ console.log(html);
     });
     const page = await browser.newPage();
     await page.setContent(html);
-    await page.screenshot({ path: filePath.replace('.drawio', '.png'), fullPage: true });
+    await page.screenshot({ path: output, fullPage: true });
     await browser.close()
 })();
